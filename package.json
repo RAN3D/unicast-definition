@@ -1,0 +1,19 @@
+{
+    "name": "unicast-definition",
+    "version": "0.0.1",
+    "author": "Chat-Wane <grumpy.chat.wane@gmail.com>",
+    "description": "Unicast component relying on a peer provider",
+    "main": "./lib/unicast.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/chat-wane/UnicastDefinition.git"
+    },
+    "keywords": [
+        "unicast"
+    ],
+    "scripts":{
+        "debug": "browserify -r ./lib/unicast.js:unicast-definition --debug > build/unicast-definition.bundle.debug.js",
+        "build": "browserify -r ./lib/unicast.js:unicast-definition | uglifyjs > build/unicast-definition.bundle.js"
+    },
+    "license": "MIT"
+}
