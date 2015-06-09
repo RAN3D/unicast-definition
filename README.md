@@ -32,7 +32,7 @@ In any case:
   rps = new RandomPeerSampling(args1);
   unicast = new Unicast(rps, name);
 
-  // #2 define the receive event of broadcast
+  // #2 define the receive event
   unicast.on('receive', function(socket, unicastMessage){
     if (unicastMessage.example.ping){
       console.log('ping');
@@ -43,6 +43,6 @@ In any case:
     };
   });
 
-  // #3 send a message to the whole network
+  // #3 send a message to a random peer in the neigbhborhood
   unicast.send(new MPingExample());
 ```
