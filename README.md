@@ -36,10 +36,10 @@ In any case:
   unicast.on('receive', function(socket, unicastMessage){
     if (unicastMessage.example.ping){
       console.log('ping');
-      socket.send(new MPongExample());
+      unicast.send(new MPongExample(), socket);
     } else {
       console.log('pong');
-      socket.send(new MPingExample());
+      unicast.send(new MPingExample(), socket);
     };
   });
 

@@ -1,6 +1,6 @@
 {
     "name": "unicast-definition",
-    "version": "0.0.2",
+    "version": "0.0.4",
     "main": "build/unicast-definition.bundle.js",
     "ignore": [
         "lib/*"
