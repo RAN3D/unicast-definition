@@ -1,6 +1,6 @@
 {
     "name": "unicast-definition",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "author": "Chat-Wane <grumpy.chat.wane@gmail.com>",
     "description": "Unicast component relying on a peer provider",
     "main": "./lib/unicast.js",
@@ -11,6 +11,9 @@
     "keywords": [
         "unicast"
     ],
+    "dependency": {
+        "debug": "2.2.x"
+    },
     "scripts":{
         "debug": "browserify -r ./lib/unicast.js:unicast-definition --debug > build/unicast-definition.bundle.debug.js",
         "build": "browserify -r ./lib/unicast.js:unicast-definition | uglifyjs > build/unicast-definition.bundle.js"
