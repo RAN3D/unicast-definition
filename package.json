@@ -1,6 +1,6 @@
 {
     "name": "unicast-definition",
-    "version": "0.0.7",
+    "version": "0.1.0",
     "author": "Chat-Wane <grumpy.chat.wane@gmail.com>",
     "description": "Unicast component relying on a peer provider",
     "main": "./lib/unicast.js",
@@ -12,10 +12,8 @@
         "unicast"
     ],
     "dependencies": {
-        "debug": "2.2.x"
     },
     "bundledDependencies": [
-        "debug"
     ],
     "scripts":{
         "debug": "browserify -r ./lib/unicast.js:unicast-definition --debug > build/unicast-definition.bundle.debug.js",
