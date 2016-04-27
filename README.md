@@ -33,13 +33,13 @@ In any case:
   unicast = new Unicast(rps, name);
 
   // #2 define the receive event
-  unicast.on('receive', function(socket, unicastMessage){
-    if (unicastMessage.example.ping){
+  unicast.on('receive', function(id, message){
+    if (message.example.ping){
       console.log('ping');
-      unicast.send(new MPongExample(), socket);
+      unicast.send(new MPongExample(), id);
     } else {
       console.log('pong');
-      unicast.send(new MPingExample(), socket);
+      unicast.send(new MPingExample(), id);
     };
   });
 
