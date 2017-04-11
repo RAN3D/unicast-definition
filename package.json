@@ -1,6 +1,6 @@
 {
     "name": "unicast-definition",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "Chat-Wane <grumpy.chat.wane@gmail.com>",
     "description": "Unicast component relying on a peer-sampling protocol",
     "main": "./lib/unicast.js",
@@ -15,11 +15,13 @@
     ],
     "dependencies": {
         "lodash": "^4.17.4",
-        "debug": "^2.6.1"
+        "debug": "^2.6.1",
+        "uuid": "^3.0.1"
     },
     "bundledDependencies": [
         "lodash",
-        "debug"
+        "debug",
+        "uuid"
     ],
     "devDependencies": {
         "browserify": "6.2.x",
