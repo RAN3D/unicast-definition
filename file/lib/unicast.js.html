@@ -48,6 +48,7 @@
 
 const debug = require(&apos;debug&apos;)(&apos;unicast-definition&apos;);
 const _ = require(&apos;lodash&apos;);
+const uuid = require(&apos;uuid/v4&apos;);
 
 const IUnicast = require(&apos;./interfaces/iunicast.js&apos;);
 
@@ -62,8 +63,8 @@ class Unicast {
     /**
      * @param {IPSP} psp The peer-sampling protocol.
      */
-    constructor(psp, options = {}) {
-        this.options = ( {retry: 0}, options );
+    constructor(psp, options = {}) {        
+        this.options = ( {retry: 0, uid: uuid()}, options);
         // #1 create the table of registered protocols
         this.psp = psp;
         this.protocols = new Map();
@@ -74,7 +75,8 @@ class Unicast {
             try {
                 __receive.call(psp, peerId, message);
             } catch (e) {
-                if (message.type &amp;&amp; message.type === &apos;MUnicast&apos;){
+                if (message.type &amp;&amp; message.type === &apos;MUnicast&apos; &amp;&amp;
+                    message.uid === this.options.uid) {
                     if (this.protocols.has(message.pid)){
                         this.protocols.get(message.pid)._receive(message);
                     } else {

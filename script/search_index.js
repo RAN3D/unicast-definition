@@ -522,6 +522,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "lib/messages/municast.js~municast#uid",
+    "class/lib/messages/municast.js~MUnicast.html#instance-member-uid",
+    "lib/messages/municast.js~MUnicast#uid",
+    "member"
+  ],
+  [
     "lib/unicast.js",
     "file/lib/unicast.js.html",
     "lib/unicast.js",

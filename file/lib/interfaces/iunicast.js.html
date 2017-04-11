@@ -77,7 +77,8 @@ class IUnicast extends EventEmitter {
          */
         this.emit = (event, peerId, ...args) =&gt; {
             return parent.psp.send(peerId,
-                                   new MUnicast(protocolId, event, args),
+                                   new MUnicast(parent.options.uid,
+                                                protocolId, event, args),
                                    parent.options.retry);
         };
     };

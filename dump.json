@@ -399,7 +399,7 @@
     "__docId__": 16,
     "kind": "file",
     "name": "lib/interfaces/iunicast.js",
-    "content": "'use strict';\n\nconst EventEmitter = require('events');\n\nconst MUnicast = require('../messages/municast.js');\n\n/**\n * An interface providing easy-to-use event-like functions on top of a\n * peer-sampling protocol. As soon as protocols register, they get an\n * interface. They can send messages using unicast.emit('eventName', neighborId,\n * args) and the neighbor can catch them using unicast.on('eventName', args).\n */\nclass IUnicast extends EventEmitter {\n    /**\n     * @param {string} protocolId The identifier of the protocol that request\n     * the interface.\n     * @param {Unicast} parent The instanciator.\n     */\n    constructor (protocolId, parent) {\n        super();      \n        // #1 replace the basic behavior of eventemitter.emit\n        this._emit = this.emit;\n        /**\n         * Send a message using the emit function.\n         * @param {string} event The event name.\n         * @param {string} peerId The identifier of the peer to send the event\n         * to.\n         * @param {object[]} [args] The arguments of the event.\n         * @returns {Promise} Resolved if the message seems to have been sent,\n         * rejected otherwise (e.g. timeout, unkown peers).\n         */\n        this.emit = (event, peerId, ...args) => {\n            return parent.psp.send(peerId,\n                                   new MUnicast(protocolId, event, args),\n                                   parent.options.retry);\n        };\n    };\n\n    /**\n     * @private Destroy all listeners and remove the send capabilities\n     */\n    _destroy () {\n        this.removeAllListener();\n        this.emit = this._emit; // retrieve basic behavior\n    };\n    \n    /**\n     * @private Receiving a MEvent message triggers an event\n     * @param {MEvent} message The message received.\n     */\n    _receive (message) {\n        this._emit(message.event, ...(message.args));\n    };\n\n};\n\nmodule.exports = IUnicast;\n",
+    "content": "'use strict';\n\nconst EventEmitter = require('events');\n\nconst MUnicast = require('../messages/municast.js');\n\n/**\n * An interface providing easy-to-use event-like functions on top of a\n * peer-sampling protocol. As soon as protocols register, they get an\n * interface. They can send messages using unicast.emit('eventName', neighborId,\n * args) and the neighbor can catch them using unicast.on('eventName', args).\n */\nclass IUnicast extends EventEmitter {\n    /**\n     * @param {string} protocolId The identifier of the protocol that request\n     * the interface.\n     * @param {Unicast} parent The instanciator.\n     */\n    constructor (protocolId, parent) {\n        super();      \n        // #1 replace the basic behavior of eventemitter.emit\n        this._emit = this.emit;\n        /**\n         * Send a message using the emit function.\n         * @param {string} event The event name.\n         * @param {string} peerId The identifier of the peer to send the event\n         * to.\n         * @param {object[]} [args] The arguments of the event.\n         * @returns {Promise} Resolved if the message seems to have been sent,\n         * rejected otherwise (e.g. timeout, unkown peers).\n         */\n        this.emit = (event, peerId, ...args) => {\n            return parent.psp.send(peerId,\n                                   new MUnicast(parent.options.uid,\n                                                protocolId, event, args),\n                                   parent.options.retry);\n        };\n    };\n\n    /**\n     * @private Destroy all listeners and remove the send capabilities\n     */\n    _destroy () {\n        this.removeAllListener();\n        this.emit = this._emit; // retrieve basic behavior\n    };\n    \n    /**\n     * @private Receiving a MEvent message triggers an event\n     * @param {MEvent} message The message received.\n     */\n    _receive (message) {\n        this._emit(message.event, ...(message.args));\n    };\n\n};\n\nmodule.exports = IUnicast;\n",
     "static": true,
     "longname": "lib/interfaces/iunicast.js",
     "access": null,
@@ -607,7 +607,7 @@
     "longname": "lib/interfaces/iunicast.js~IUnicast#_destroy",
     "access": "private",
     "description": "",
-    "lineNumber": 42,
+    "lineNumber": 43,
     "params": []
   },
   {
@@ -619,7 +619,7 @@
     "longname": "lib/interfaces/iunicast.js~IUnicast#emit",
     "access": null,
     "description": null,
-    "lineNumber": 44,
+    "lineNumber": 45,
     "undocument": true,
     "unknown": [
       {
@@ -644,7 +644,7 @@
     "longname": "lib/interfaces/iunicast.js~IUnicast#_receive",
     "access": "private",
     "description": "",
-    "lineNumber": 51,
+    "lineNumber": 52,
     "params": [
       {
         "nullable": null,
@@ -662,7 +662,7 @@
     "__docId__": 26,
     "kind": "file",
     "name": "lib/messages/municast.js",
-    "content": "'use strict';\n\n/**\n * Message that triggers an event remotely for the protocol.\n */\nclass MUnicast {\n    /**\n     * @param {string} protocolId The identifier of the protocol that sent the\n     * message and that will receive the message.\n     * @param {string} eventName The name of the event to trigger.\n     * @param {object[]} [args] The arguments of the event.\n     */\n    constructor(protocolId, eventName, args){\n        this.pid = protocolId;\n        this.event = eventName;\n        this.args = args;\n        this.type = 'MUnicast';\n    };\n};\n\nmodule.exports = MUnicast;\n",
+    "content": "'use strict';\n\n/**\n * Message that triggers an event remotely for the protocol.\n */\nclass MUnicast {\n    /**\n     * @param {string} unicastId The identifier of the unicast protocol.\n     * @param {string} protocolId The identifier of the protocol that sent the\n     * message and that will receive the message.\n     * @param {string} eventName The name of the event to trigger.\n     * @param {object[]} [args] The arguments of the event.\n     */\n    constructor(unicastId, protocolId, eventName, args){\n        this.uid = unicastId;\n        this.pid = protocolId;\n        this.event = eventName;\n        this.args = args;\n        this.type = 'MUnicast';\n    };\n};\n\nmodule.exports = MUnicast;\n",
     "static": true,
     "longname": "lib/messages/municast.js",
     "access": null,
@@ -695,8 +695,18 @@
     "longname": "lib/messages/municast.js~MUnicast#constructor",
     "access": null,
     "description": "",
-    "lineNumber": 13,
+    "lineNumber": 14,
     "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "unicastId",
+        "description": "The identifier of the unicast protocol."
+      },
       {
         "nullable": null,
         "types": [
@@ -732,33 +742,10 @@
   {
     "__docId__": 29,
     "kind": "member",
-    "name": "pid",
+    "name": "uid",
     "memberof": "lib/messages/municast.js~MUnicast",
     "static": false,
-    "longname": "lib/messages/municast.js~MUnicast#pid",
-    "access": null,
-    "description": null,
-    "lineNumber": 14,
-    "undocument": true,
-    "unknown": [
-      {
-        "tagName": "@_undocument",
-        "tagValue": ""
-      }
-    ],
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 30,
-    "kind": "member",
-    "name": "event",
-    "memberof": "lib/messages/municast.js~MUnicast",
-    "static": false,
-    "longname": "lib/messages/municast.js~MUnicast#event",
+    "longname": "lib/messages/municast.js~MUnicast#uid",
     "access": null,
     "description": null,
     "lineNumber": 15,
@@ -776,12 +763,12 @@
     }
   },
   {
-    "__docId__": 31,
+    "__docId__": 30,
     "kind": "member",
-    "name": "args",
+    "name": "pid",
     "memberof": "lib/messages/municast.js~MUnicast",
     "static": false,
-    "longname": "lib/messages/municast.js~MUnicast#args",
+    "longname": "lib/messages/municast.js~MUnicast#pid",
     "access": null,
     "description": null,
     "lineNumber": 16,
@@ -799,7 +786,53 @@
     }
   },
   {
+    "__docId__": 31,
+    "kind": "member",
+    "name": "event",
+    "memberof": "lib/messages/municast.js~MUnicast",
+    "static": false,
+    "longname": "lib/messages/municast.js~MUnicast#event",
+    "access": null,
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
     "__docId__": 32,
+    "kind": "member",
+    "name": "args",
+    "memberof": "lib/messages/municast.js~MUnicast",
+    "static": false,
+    "longname": "lib/messages/municast.js~MUnicast#args",
+    "access": null,
+    "description": null,
+    "lineNumber": 18,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 33,
     "kind": "member",
     "name": "type",
     "memberof": "lib/messages/municast.js~MUnicast",
@@ -807,7 +840,7 @@
     "longname": "lib/messages/municast.js~MUnicast#type",
     "access": null,
     "description": null,
-    "lineNumber": 17,
+    "lineNumber": 19,
     "undocument": true,
     "unknown": [
       {
@@ -822,10 +855,10 @@
     }
   },
   {
-    "__docId__": 33,
+    "__docId__": 34,
     "kind": "file",
     "name": "lib/unicast.js",
-    "content": "'use strict';\n\nconst debug = require('debug')('unicast-definition');\nconst _ = require('lodash');\n\nconst IUnicast = require('./interfaces/iunicast.js');\n\nconst ExProtocol = require('./exceptions/exprotocol.js');\nconst ExMessage = require('./exceptions/exmessage.js');\n\n/**\n * Unicast component that simply chooses a random peer from a peer-sampling\n * protocol and send a message.\n */\nclass Unicast {\n    /**\n     * @param {IPSP} psp The peer-sampling protocol.\n     */\n    constructor(psp, options = {}) {\n        this.options = ( {retry: 0}, options );\n        // #1 create the table of registered protocols\n        this.psp = psp;\n        this.protocols = new Map();\n        // #2 overload the receipt of messages from the peer-sampling protocol\n        // (TODO) maybe a cleaner way ? \n        let __receive = psp._receive;\n        psp._receive = (peerId, message) => {\n            try {\n                __receive.call(psp, peerId, message);\n            } catch (e) {\n                if (message.type && message.type === 'MUnicast'){\n                    if (this.protocols.has(message.pid)){\n                        this.protocols.get(message.pid)._receive(message);\n                    } else {\n                        throw new ExProtocol('_receive',\n                                             message.pid,\n                                             'does not exist');\n                    };\n                } else {\n                    throw new ExMessage('_receive', message, 'unhandled');\n                };\n            };\n        };\n        \n        debug('just initialized on top of %s@%s.', this.psp.PID, this.psp.PEER);\n    };\n\n\n    /**\n     * Registers the protocol that wishes to use this module.\n     * @param {string} protocolId The identifier of the protocol that registers.\n     * @returns {IUnicast} An interface providing easy-to-use event-like\n     * functions to send and receive messages.\n     */\n    register(protocolId) {\n        if (!this.protocols.has(protocolId)) {\n            this.protocols.set(protocolId, new IUnicast(protocolId, this));\n            debug('Protocol %s just registered.', protocolId);\n            return this.protocols.get(protocolId);\n        } else {\n            throw new ExProtocol('register', protocolId, 'already exists');\n        };\n    };\n    \n    /**\n     * Unregisters the protocol.\n     * @param {string} protocolId The identifier of the protocol that\n     * unregisters.\n     */\n    unregister(protocolId) {\n        if (this.protocols.has(protocolId)){\n            this.protocols.get(protocolId).destroy();\n            this.protocols.delete(protocolId);\n            debug('Protocol %s just unregistered.', protocolId);\n        } else {\n            throw new ExProtocol('unregister', protocolId, 'does not exist');\n        };\n    };\n    \n};\n\nmodule.exports = Unicast;\n",
+    "content": "'use strict';\n\nconst debug = require('debug')('unicast-definition');\nconst _ = require('lodash');\nconst uuid = require('uuid/v4');\n\nconst IUnicast = require('./interfaces/iunicast.js');\n\nconst ExProtocol = require('./exceptions/exprotocol.js');\nconst ExMessage = require('./exceptions/exmessage.js');\n\n/**\n * Unicast component that simply chooses a random peer from a peer-sampling\n * protocol and send a message.\n */\nclass Unicast {\n    /**\n     * @param {IPSP} psp The peer-sampling protocol.\n     */\n    constructor(psp, options = {}) {        \n        this.options = ( {retry: 0, uid: uuid()}, options);\n        // #1 create the table of registered protocols\n        this.psp = psp;\n        this.protocols = new Map();\n        // #2 overload the receipt of messages from the peer-sampling protocol\n        // (TODO) maybe a cleaner way ? \n        let __receive = psp._receive;\n        psp._receive = (peerId, message) => {\n            try {\n                __receive.call(psp, peerId, message);\n            } catch (e) {\n                if (message.type && message.type === 'MUnicast' &&\n                    message.uid === this.options.uid) {\n                    if (this.protocols.has(message.pid)){\n                        this.protocols.get(message.pid)._receive(message);\n                    } else {\n                        throw new ExProtocol('_receive',\n                                             message.pid,\n                                             'does not exist');\n                    };\n                } else {\n                    throw new ExMessage('_receive', message, 'unhandled');\n                };\n            };\n        };\n        \n        debug('just initialized on top of %s@%s.', this.psp.PID, this.psp.PEER);\n    };\n\n\n    /**\n     * Registers the protocol that wishes to use this module.\n     * @param {string} protocolId The identifier of the protocol that registers.\n     * @returns {IUnicast} An interface providing easy-to-use event-like\n     * functions to send and receive messages.\n     */\n    register(protocolId) {\n        if (!this.protocols.has(protocolId)) {\n            this.protocols.set(protocolId, new IUnicast(protocolId, this));\n            debug('Protocol %s just registered.', protocolId);\n            return this.protocols.get(protocolId);\n        } else {\n            throw new ExProtocol('register', protocolId, 'already exists');\n        };\n    };\n    \n    /**\n     * Unregisters the protocol.\n     * @param {string} protocolId The identifier of the protocol that\n     * unregisters.\n     */\n    unregister(protocolId) {\n        if (this.protocols.has(protocolId)){\n            this.protocols.get(protocolId).destroy();\n            this.protocols.delete(protocolId);\n            debug('Protocol %s just unregistered.', protocolId);\n        } else {\n            throw new ExProtocol('unregister', protocolId, 'does not exist');\n        };\n    };\n    \n};\n\nmodule.exports = Unicast;\n",
     "static": true,
     "longname": "lib/unicast.js",
     "access": null,
@@ -833,7 +866,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 34,
+    "__docId__": 35,
     "kind": "variable",
     "name": "debug",
     "memberof": "lib/unicast.js",
@@ -859,7 +892,7 @@
     }
   },
   {
-    "__docId__": 35,
+    "__docId__": 36,
     "kind": "variable",
     "name": "_",
     "memberof": "lib/unicast.js",
@@ -885,44 +918,18 @@
     }
   },
   {
-    "__docId__": 36,
-    "kind": "variable",
-    "name": "IUnicast",
-    "memberof": "lib/unicast.js",
-    "static": true,
-    "longname": "lib/unicast.js~IUnicast",
-    "access": null,
-    "export": false,
-    "importPath": "unicast-definition",
-    "importStyle": null,
-    "description": null,
-    "lineNumber": 6,
-    "undocument": true,
-    "unknown": [
-      {
-        "tagName": "@_undocument",
-        "tagValue": ""
-      }
-    ],
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
     "__docId__": 37,
     "kind": "variable",
-    "name": "ExProtocol",
+    "name": "uuid",
     "memberof": "lib/unicast.js",
     "static": true,
-    "longname": "lib/unicast.js~ExProtocol",
+    "longname": "lib/unicast.js~uuid",
     "access": null,
     "export": false,
     "importPath": "unicast-definition",
     "importStyle": null,
     "description": null,
-    "lineNumber": 8,
+    "lineNumber": 5,
     "undocument": true,
     "unknown": [
       {
@@ -939,10 +946,36 @@
   {
     "__docId__": 38,
     "kind": "variable",
-    "name": "ExMessage",
+    "name": "IUnicast",
     "memberof": "lib/unicast.js",
     "static": true,
-    "longname": "lib/unicast.js~ExMessage",
+    "longname": "lib/unicast.js~IUnicast",
+    "access": null,
+    "export": false,
+    "importPath": "unicast-definition",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 39,
+    "kind": "variable",
+    "name": "ExProtocol",
+    "memberof": "lib/unicast.js",
+    "static": true,
+    "longname": "lib/unicast.js~ExProtocol",
     "access": null,
     "export": false,
     "importPath": "unicast-definition",
@@ -963,7 +996,33 @@
     }
   },
   {
-    "__docId__": 39,
+    "__docId__": 40,
+    "kind": "variable",
+    "name": "ExMessage",
+    "memberof": "lib/unicast.js",
+    "static": true,
+    "longname": "lib/unicast.js~ExMessage",
+    "access": null,
+    "export": false,
+    "importPath": "unicast-definition",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 41,
     "kind": "class",
     "name": "Unicast",
     "memberof": "lib/unicast.js",
@@ -974,11 +1033,11 @@
     "importPath": "unicast-definition",
     "importStyle": "Unicast",
     "description": "Unicast component that simply chooses a random peer from a peer-sampling\nprotocol and send a message.",
-    "lineNumber": 15,
+    "lineNumber": 16,
     "interface": false
   },
   {
-    "__docId__": 40,
+    "__docId__": 42,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "lib/unicast.js~Unicast",
@@ -988,7 +1047,7 @@
     "longname": "lib/unicast.js~Unicast#constructor",
     "access": null,
     "description": "",
-    "lineNumber": 19,
+    "lineNumber": 20,
     "params": [
       {
         "nullable": null,
@@ -1003,7 +1062,7 @@
     ]
   },
   {
-    "__docId__": 41,
+    "__docId__": 43,
     "kind": "member",
     "name": "options",
     "memberof": "lib/unicast.js~Unicast",
@@ -1011,7 +1070,7 @@
     "longname": "lib/unicast.js~Unicast#options",
     "access": null,
     "description": null,
-    "lineNumber": 20,
+    "lineNumber": 21,
     "undocument": true,
     "unknown": [
       {
@@ -1026,35 +1085,12 @@
     }
   },
   {
-    "__docId__": 42,
+    "__docId__": 44,
     "kind": "member",
     "name": "psp",
     "memberof": "lib/unicast.js~Unicast",
     "static": false,
     "longname": "lib/unicast.js~Unicast#psp",
-    "access": null,
-    "description": null,
-    "lineNumber": 22,
-    "undocument": true,
-    "unknown": [
-      {
-        "tagName": "@_undocument",
-        "tagValue": ""
-      }
-    ],
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 43,
-    "kind": "member",
-    "name": "protocols",
-    "memberof": "lib/unicast.js~Unicast",
-    "static": false,
-    "longname": "lib/unicast.js~Unicast#protocols",
     "access": null,
     "description": null,
     "lineNumber": 23,
@@ -1072,7 +1108,30 @@
     }
   },
   {
-    "__docId__": 44,
+    "__docId__": 45,
+    "kind": "member",
+    "name": "protocols",
+    "memberof": "lib/unicast.js~Unicast",
+    "static": false,
+    "longname": "lib/unicast.js~Unicast#protocols",
+    "access": null,
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "unknown": [
+      {
+        "tagName": "@_undocument",
+        "tagValue": ""
+      }
+    ],
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 46,
     "kind": "method",
     "name": "register",
     "memberof": "lib/unicast.js~Unicast",
@@ -1082,7 +1141,7 @@
     "longname": "lib/unicast.js~Unicast#register",
     "access": null,
     "description": "Registers the protocol that wishes to use this module.",
-    "lineNumber": 55,
+    "lineNumber": 57,
     "unknown": [
       {
         "tagName": "@returns",
@@ -1111,7 +1170,7 @@
     }
   },
   {
-    "__docId__": 45,
+    "__docId__": 47,
     "kind": "method",
     "name": "unregister",
     "memberof": "lib/unicast.js~Unicast",
@@ -1121,7 +1180,7 @@
     "longname": "lib/unicast.js~Unicast#unregister",
     "access": null,
     "description": "Unregisters the protocol.",
-    "lineNumber": 70,
+    "lineNumber": 72,
     "params": [
       {
         "nullable": null,
@@ -1136,7 +1195,7 @@
     ]
   },
   {
-    "__docId__": 47,
+    "__docId__": 49,
     "kind": "external",
     "name": "Infinity",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
@@ -1148,7 +1207,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 48,
+    "__docId__": 50,
     "kind": "external",
     "name": "NaN",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
@@ -1160,7 +1219,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 49,
+    "__docId__": 51,
     "kind": "external",
     "name": "undefined",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
@@ -1172,7 +1231,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 50,
+    "__docId__": 52,
     "kind": "external",
     "name": "null",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
@@ -1184,7 +1243,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 51,
+    "__docId__": 53,
     "kind": "external",
     "name": "Object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -1196,7 +1255,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 52,
+    "__docId__": 54,
     "kind": "external",
     "name": "object",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
@@ -1208,7 +1267,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 53,
+    "__docId__": 55,
     "kind": "external",
     "name": "Function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -1220,7 +1279,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 54,
+    "__docId__": 56,
     "kind": "external",
     "name": "function",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
@@ -1232,7 +1291,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 55,
+    "__docId__": 57,
     "kind": "external",
     "name": "Boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -1244,7 +1303,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 56,
+    "__docId__": 58,
     "kind": "external",
     "name": "boolean",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
@@ -1256,7 +1315,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 57,
+    "__docId__": 59,
     "kind": "external",
     "name": "Symbol",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
@@ -1268,7 +1327,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 58,
+    "__docId__": 60,
     "kind": "external",
     "name": "Error",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
@@ -1280,7 +1339,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 59,
+    "__docId__": 61,
     "kind": "external",
     "name": "EvalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
@@ -1292,7 +1351,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 60,
+    "__docId__": 62,
     "kind": "external",
     "name": "InternalError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
@@ -1304,7 +1363,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 61,
+    "__docId__": 63,
     "kind": "external",
     "name": "RangeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
@@ -1316,7 +1375,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 62,
+    "__docId__": 64,
     "kind": "external",
     "name": "ReferenceError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
@@ -1328,7 +1387,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 63,
+    "__docId__": 65,
     "kind": "external",
     "name": "SyntaxError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
@@ -1340,7 +1399,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 64,
+    "__docId__": 66,
     "kind": "external",
     "name": "TypeError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
@@ -1352,7 +1411,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 65,
+    "__docId__": 67,
     "kind": "external",
     "name": "URIError",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
@@ -1364,7 +1423,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 66,
+    "__docId__": 68,
     "kind": "external",
     "name": "Number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -1376,7 +1435,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 67,
+    "__docId__": 69,
     "kind": "external",
     "name": "number",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
@@ -1388,7 +1447,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 68,
+    "__docId__": 70,
     "kind": "external",
     "name": "Date",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
@@ -1400,7 +1459,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 69,
+    "__docId__": 71,
     "kind": "external",
     "name": "String",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -1412,7 +1471,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 70,
+    "__docId__": 72,
     "kind": "external",
     "name": "string",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
@@ -1424,7 +1483,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 71,
+    "__docId__": 73,
     "kind": "external",
     "name": "RegExp",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
@@ -1436,7 +1495,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 72,
+    "__docId__": 74,
     "kind": "external",
     "name": "Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
@@ -1448,7 +1507,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 73,
+    "__docId__": 75,
     "kind": "external",
     "name": "Int8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
@@ -1460,7 +1519,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 74,
+    "__docId__": 76,
     "kind": "external",
     "name": "Uint8Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
@@ -1472,7 +1531,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 75,
+    "__docId__": 77,
     "kind": "external",
     "name": "Uint8ClampedArray",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
@@ -1484,7 +1543,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 76,
+    "__docId__": 78,
     "kind": "external",
     "name": "Int16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
@@ -1496,7 +1555,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 77,
+    "__docId__": 79,
     "kind": "external",
     "name": "Uint16Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
@@ -1508,7 +1567,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 78,
+    "__docId__": 80,
     "kind": "external",
     "name": "Int32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
@@ -1520,7 +1579,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 79,
+    "__docId__": 81,
     "kind": "external",
     "name": "Uint32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
@@ -1532,7 +1591,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 80,
+    "__docId__": 82,
     "kind": "external",
     "name": "Float32Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
@@ -1544,7 +1603,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 81,
+    "__docId__": 83,
     "kind": "external",
     "name": "Float64Array",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
@@ -1556,7 +1615,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 82,
+    "__docId__": 84,
     "kind": "external",
     "name": "Map",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
@@ -1568,7 +1627,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 83,
+    "__docId__": 85,
     "kind": "external",
     "name": "Set",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
@@ -1580,7 +1639,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 84,
+    "__docId__": 86,
     "kind": "external",
     "name": "WeakMap",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
@@ -1592,7 +1651,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 85,
+    "__docId__": 87,
     "kind": "external",
     "name": "WeakSet",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
@@ -1604,7 +1663,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 86,
+    "__docId__": 88,
     "kind": "external",
     "name": "ArrayBuffer",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
@@ -1616,7 +1675,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 87,
+    "__docId__": 89,
     "kind": "external",
     "name": "DataView",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
@@ -1628,7 +1687,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 88,
+    "__docId__": 90,
     "kind": "external",
     "name": "JSON",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
@@ -1640,7 +1699,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 89,
+    "__docId__": 91,
     "kind": "external",
     "name": "Promise",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
@@ -1652,7 +1711,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 90,
+    "__docId__": 92,
     "kind": "external",
     "name": "Generator",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
@@ -1664,7 +1723,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 91,
+    "__docId__": 93,
     "kind": "external",
     "name": "GeneratorFunction",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
@@ -1676,7 +1735,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 92,
+    "__docId__": 94,
     "kind": "external",
     "name": "Reflect",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
@@ -1688,7 +1747,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 93,
+    "__docId__": 95,
     "kind": "external",
     "name": "Proxy",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
@@ -1701,7 +1760,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 95,
+    "__docId__": 97,
     "kind": "external",
     "name": "CanvasRenderingContext2D",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
@@ -1713,7 +1772,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 96,
+    "__docId__": 98,
     "kind": "external",
     "name": "DocumentFragment",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
@@ -1725,7 +1784,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 97,
+    "__docId__": 99,
     "kind": "external",
     "name": "Element",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
@@ -1737,7 +1796,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 98,
+    "__docId__": 100,
     "kind": "external",
     "name": "Event",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
@@ -1749,7 +1808,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 99,
+    "__docId__": 101,
     "kind": "external",
     "name": "Node",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
@@ -1761,7 +1820,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 100,
+    "__docId__": 102,
     "kind": "external",
     "name": "NodeList",
     "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
@@ -1773,7 +1832,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 101,
+    "__docId__": 103,
     "kind": "external",
     "name": "XMLHttpRequest",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
@@ -1785,7 +1844,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 102,
+    "__docId__": 104,
     "kind": "external",
     "name": "AudioContext",
     "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
