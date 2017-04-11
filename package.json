@@ -6,18 +6,33 @@
     "main": "./lib/unicast.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/chat-wane/UnicastDefinition.git"
+        "url": "https://github.com/ran3d/unicast-definition.git"
     },
     "keywords": [
-        "unicast"
+        "unicast",
+        "browser-to-browser communication",
+        "WebRTC"
     ],
     "dependencies": {
+        "lodash": "^4.17.4",
+        "debug": "^2.6.1"
     },
     "bundledDependencies": [
+        "lodash",
+        "debug"
     ],
-    "scripts":{
+    "devDependencies": {
+        "browserify": "6.2.x",
+        "esdoc": "^0.5.2",
+        "esdoc-node": "^1.0.1"
+    },
+    "scripts": {
         "debug": "browserify -r ./lib/unicast.js:unicast-definition --debug > build/unicast-definition.bundle.debug.js",
-        "build": "browserify -r ./lib/unicast.js:unicast-definition | uglifyjs > build/unicast-definition.bundle.js"
+        "build": "browserify -r ./lib/unicast.js:unicast-definition > build/unicast-definition.bundle.js",
+        "esdoc": "esdoc && npm run esdoc:example",
+        "esdoc:example": "cp -R ./build ./examples ./docs",
+        "test": "npm run all",
+        "all": "npm run debug && npm run build && npm run esdoc"
     },
     "license": "MIT"
 }

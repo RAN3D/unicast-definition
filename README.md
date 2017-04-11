@@ -1,7 +1,10 @@
-# UnicastDefinition
+# unicast-definition
 
-Unicast component on top of a communication overlay. It simply sends a message
-to one peer in the neighborhood and possibly gets a response.
+<i>Keywords: Unicast,
+
+Unicast component relying on a peer-sampling protocol. Similarly to
+[socket.io](https://socket.io), this module provides an event-like API to send
+and receive messages.
 
 ## Installation
 
@@ -9,5 +12,8 @@ to one peer in the neighborhood and possibly gets a response.
 
 ## API
 
+The API is available [here](https://ran3d.github.io/unicast-definition/).
+
 ## Example
+
 
