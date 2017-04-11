@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">lib/unicast.js | unicast-definition API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/ran3d/unicast-definition.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/unicast.js~Unicast.html">Unicast</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">exceptions</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/exceptions/exmessage.js~ExMessage.html">ExMessage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/exceptions/exprotocol.js~ExProtocol.html">ExProtocol</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interfaces</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/interfaces/iunicast.js~IUnicast.html">IUnicast</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">messages</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/messages/municast.js~MUnicast.html">MUnicast</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/unicast.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+
+const debug = require(&apos;debug&apos;)(&apos;unicast-definition&apos;);
+const _ = require(&apos;lodash&apos;);
+
+const IUnicast = require(&apos;./interfaces/iunicast.js&apos;);
+
+const ExProtocol = require(&apos;./exceptions/exprotocol.js&apos;);
+const ExMessage = require(&apos;./exceptions/exmessage.js&apos;);
+
+/**
+ * Unicast component that simply chooses a random peer from a peer-sampling
+ * protocol and send a message.
+ */
+class Unicast {
+    /**
+     * @param {IPSP} psp The peer-sampling protocol.
+     */
+    constructor(psp, options = {}) {
+        this.options = ( {retry: 0}, options );
+        // #1 create the table of registered protocols
+        this.psp = psp;
+        this.protocols = new Map();
+        // #2 overload the receipt of messages from the peer-sampling protocol
+        // (TODO) maybe a cleaner way ? 
+        let __receive = psp._receive;
+        psp._receive = (peerId, message) =&gt; {
+            try {
+                __receive.call(psp, peerId, message);
+            } catch (e) {
+                if (message.type &amp;&amp; message.type === &apos;MUnicast&apos;){
+                    if (this.protocols.has(message.pid)){
+                        this.protocols.get(message.pid)._receive(message);
+                    } else {
+                        throw new ExProtocol(&apos;_receive&apos;,
+                                             message.pid,
+                                             &apos;does not exist&apos;);
+                    };
+                } else {
+                    throw new ExMessage(&apos;_receive&apos;, message, &apos;unhandled&apos;);
+                };
+            };
+        };
+        
+        debug(&apos;just initialized on top of %s@%s.&apos;, this.psp.PID, this.psp.PEER);
+    };
+
+
+    /**
+     * Registers the protocol that wishes to use this module.
+     * @param {string} protocolId The identifier of the protocol that registers.
+     * @returns {IUnicast} An interface providing easy-to-use event-like
+     * functions to send and receive messages.
+     */
+    register(protocolId) {
+        if (!this.protocols.has(protocolId)) {
+            this.protocols.set(protocolId, new IUnicast(protocolId, this));
+            debug(&apos;Protocol %s just registered.&apos;, protocolId);
+            return this.protocols.get(protocolId);
+        } else {
+            throw new ExProtocol(&apos;register&apos;, protocolId, &apos;already exists&apos;);
+        };
+    };
+    
+    /**
+     * Unregisters the protocol.
+     * @param {string} protocolId The identifier of the protocol that
+     * unregisters.
+     */
+    unregister(protocolId) {
+        if (this.protocols.has(protocolId)){
+            this.protocols.get(protocolId).destroy();
+            this.protocols.delete(protocolId);
+            debug(&apos;Protocol %s just unregistered.&apos;, protocolId);
+        } else {
+            throw new ExProtocol(&apos;unregister&apos;, protocolId, &apos;does not exist&apos;);
+        };
+    };
+    
+};
+
+module.exports = Unicast;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.5.2)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
