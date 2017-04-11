@@ -5,44 +5,9 @@ to one peer in the neighborhood and possibly gets a response.
 
 ## Installation
 
-```
-$ npm install unicast-definition
-```
-or
-```
-$ bower install unicast-definition
-```
+```$ npm install unicast-definition```
 
-## Usage
+## API
 
-The module has been [browserified](http://browserify.org) and
-[uglified](https://github.com/mishoo/UglifyJS). To include it within your
-browser, put the following line in your html:
-```html
-  <script src='./build/unicast-definition.bundle.js'></script>
-  <script src='./build/random-peer-sampling-example.bundle.js'></script>
-```
+## Example
 
-In any case:
-```javascript
-  var Unicast = require('unicast-definition');
-  var RandomPeerSampling = require('random-peer-sampling-example');
-
-  // #1 initialize the protocols
-  rps = new RandomPeerSampling(args1);
-  unicast = new Unicast(rps, name);
-
-  // #2 define the receive event
-  unicast.on('receive', function(id, message){
-    if (message.example.ping){
-      console.log('ping');
-      unicast.send(new MPongExample(), id);
-    } else {
-      console.log('pong');
-      unicast.send(new MPingExample(), id);
-    };
-  });
-
-  // #3 send a message to a random peer in the neigbhborhood
-  unicast.send(new MPingExample());
-```

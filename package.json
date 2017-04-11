@@ -1,8 +1,8 @@
 {
     "name": "unicast-definition",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "author": "Chat-Wane <grumpy.chat.wane@gmail.com>",
-    "description": "Unicast component relying on a peer provider",
+    "description": "Unicast component relying on a peer-sampling protocol",
     "main": "./lib/unicast.js",
     "repository": {
         "type": "git",
