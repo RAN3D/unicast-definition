@@ -92,8 +92,8 @@ class IUnicast extends EventEmitter {
     };
     
     /**
-     * @private Receiving a MEvent message triggers an event
-     * @param {MEvent} message The message received.
+     * @private Receiving an MUnicast message triggers an event
+     * @param {MUnicast} message The message received.
      */
     _receive (message) {
         this._emit(message.event, ...(message.args));
