@@ -18197,7 +18197,7 @@ class Unicast {
                                              'does not exist');
                     };
                 } else {
-                    throw new ExMessage('_receive', message, 'unhandled');
+                    throw (e);
                 };
             };
         };
