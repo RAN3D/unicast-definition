@@ -44,13 +44,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Unicast from &apos;<span><a href="file/lib/unicast.js.html#lineNumber16">unicast-definition</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Unicast from &apos;<span><a href="file/lib/unicast.js.html#lineNumber15">unicast-definition</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/lib/unicast.js.html#lineNumber16">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/lib/unicast.js.html#lineNumber15">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -103,7 +103,7 @@ protocol and send a message.</p>
         <p>
           
           
-          <span data-ice="name"><span><a href="class/lib/unicast.js~Unicast.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(psp: <span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span>)</span>
+          <span data-ice="name"><span><a href="class/lib/unicast.js~Unicast.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(psp: <span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span>, options: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>)</span>
         </p>
       </div>
       <div>
@@ -286,11 +286,11 @@ protocol and send a message.</p>
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(psp: <span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span>)</span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(psp: <span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span>, options: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber20">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber24">source</a></span></span>
     </span>
   </h3>
 
@@ -314,6 +314,31 @@ protocol and send a message.</p>
       <td data-ice="type"><span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>The peer-sampling protocol.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">options</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>The options of this unicast.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.uid</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default:  &apos;default-unicast&apos;</li></ul></td>
+      <td data-ice="description"><p>The name of this
+unicast.</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">option.retry</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default:  0</li></ul></td>
+      <td data-ice="description"><p>The number of attempt to send a
+message.</p>
 </td>
     </tr>
 </tbody>
@@ -353,7 +378,7 @@ protocol and send a message.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber21">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber25">source</a></span></span>
     </span>
   </h3>
 
@@ -396,7 +421,7 @@ protocol and send a message.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber24">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber28">source</a></span></span>
     </span>
   </h3>
 
@@ -439,7 +464,7 @@ protocol and send a message.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber23">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber27">source</a></span></span>
     </span>
   </h3>
 
@@ -485,7 +510,7 @@ protocol and send a message.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber57">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber61">source</a></span></span>
     </span>
   </h3>
 
@@ -560,7 +585,7 @@ functions to send and receive messages.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber72">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/unicast.js.html#lineNumber76">source</a></span></span>
     </span>
   </h3>
 
