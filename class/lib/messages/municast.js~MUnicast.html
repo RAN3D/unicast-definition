@@ -33,11 +33,8 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/unicast.js~Unicast.html">Unicast</a></span></span></li>
-<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">exceptions</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/exceptions/exmessage.js~ExMessage.html">ExMessage</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/exceptions/exprotocol.js~ExProtocol.html">ExProtocol</a></span></span></li>
-<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interfaces</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/interfaces/iunicast.js~IUnicast.html">IUnicast</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interfaces</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">messages</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/messages/municast.js~MUnicast.html">MUnicast</a></span></span></li>
 </ul>
 </div>
@@ -102,7 +99,7 @@
         <p>
           
           
-          <span data-ice="name"><span><a href="class/lib/messages/municast.js~MUnicast.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(unicastId: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, protocolId: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, eventName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, args: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span><span>[]</span></span>)</span>
+          <span data-ice="name"><span><a href="class/lib/messages/municast.js~MUnicast.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(protocolId: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, eventName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, args: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span><span>[]</span></span>)</span>
         </p>
       </div>
       <div>
@@ -231,33 +228,6 @@
       
     </td>
   </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          <span data-ice="name"><span><a href="class/lib/messages/municast.js~MUnicast.html#instance-member-uid">uid</a></span></span><span data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
 </tbody>
 </table>
 </div>
@@ -277,11 +247,11 @@
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(unicastId: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, protocolId: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, eventName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, args: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span><span>[]</span></span>)</span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(protocolId: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, eventName: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, args: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span><span>[]</span></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber14">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber12">source</a></span></span>
     </span>
   </h3>
 
@@ -301,18 +271,10 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">unicastId</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The identifier of the unicast protocol.</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">protocolId</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The identifier of the protocol that sent the
-message and that will receive the message.</p>
+      <td data-ice="description"><p>The identifier of the unicast protocol.</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
@@ -366,7 +328,7 @@ message and that will receive the message.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber18">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber15">source</a></span></span>
     </span>
   </h3>
 
@@ -409,7 +371,7 @@ message and that will receive the message.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber17">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber14">source</a></span></span>
     </span>
   </h3>
 
@@ -452,7 +414,7 @@ message and that will receive the message.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber16">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber13">source</a></span></span>
     </span>
   </h3>
 
@@ -495,50 +457,7 @@ message and that will receive the message.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber19">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-uid">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span data-ice="name">uid</span><span data-ice="signature">: <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber15">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/messages/municast.js.html#lineNumber16">source</a></span></span>
     </span>
   </h3>
 

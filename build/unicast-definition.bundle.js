@@ -2,123 +2,15 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 'use strict';
 
 /**
- * This module encountered a problem with a message.
- */
-class ExMessage {
-    /**
-     * @param {string} source The name of the function that threw.
-     * @param {object} message The incriminated message.
-     * @param {string} reason The reason of the throw.
-     */
-    constructor (source, message, reason){
-        this.source = source;
-        this.message = message;
-        this.reason = reason;
-    };
-};
-
-
-module.exports = ExMessage;
-
-},{}],2:[function(require,module,exports){
-'use strict';
-
-/**
- * Exception that rises when protocols do not behave!
- */
-class ExProtocol {
-    /**
-     * @param {string} source The name of the function that threw this
-     * exception.
-     * @param {string} protocolId The identifier of the protocol that already
-     * exists.
-     * @param {string} reason The reason of this exception.
-     */
-    constructor (source, protocolId, reason) {
-        this.source = source;
-        this.pid = protocolId;
-        this.reason = reason;
-    };
-};
-
-module.exports = ExProtocol;
-
-},{}],3:[function(require,module,exports){
-'use strict';
-
-const EventEmitter = require('events');
-
-const MUnicast = require('../messages/municast.js');
-
-/**
- * An interface providing easy-to-use event-like functions on top of a
- * peer-sampling protocol. As soon as protocols register, they get an
- * interface. They can send messages using unicast.emit('eventName', neighborId,
- * args) and the neighbor can catch them using unicast.on('eventName', args).
- */
-class IUnicast extends EventEmitter {
-    /**
-     * @param {string} protocolId The identifier of the protocol that request
-     * the interface.
-     * @param {Unicast} parent The instanciator.
-     */
-    constructor (protocolId, parent) {
-        super();      
-        // #1 replace the basic behavior of eventemitter.emit
-        this._emit = this.emit;
-        /**
-         * Send a message using the emit function.
-         * @param {string} event The event name.
-         * @param {string} peerId The identifier of the peer to send the event
-         * to.
-         * @param {object[]} [args] The arguments of the event.
-         * @returns {Promise} Resolved if the message seems to have been sent,
-         * rejected otherwise (e.g. timeout, unkown peers).
-         */
-        this.emit = (event, peerId, ...args) => {
-            return parent.psp.send(peerId,
-                                   new MUnicast(parent.options.uid,
-                                                protocolId, event, args),
-                                   parent.options.retry);
-        };
-    };
-
-    /**
-     * @private Destroy all listeners and remove the send capabilities
-     */
-    _destroy () {
-        this.removeAllListener();
-        this.emit = this._emit; // retrieve basic behavior
-    };
-    
-    /**
-     * @private Receiving an MUnicast message triggers an event
-     * @param {MUnicast} message The message received.
-     */
-    _receive (message) {
-        this._emit(message.event, ...(message.args));
-    };
-
-};
-
-module.exports = IUnicast;
-
-},{"../messages/municast.js":4,"events":7}],4:[function(require,module,exports){
-'use strict';
-
-/**
  * Message that triggers an event remotely for the protocol.
  */
 class MUnicast {
     /**
-     * @param {string} unicastId The identifier of the unicast protocol.
-     * @param {string} protocolId The identifier of the protocol that sent the
-     * message and that will receive the message.
+     * @param {string} protocolId The identifier of the unicast protocol.
      * @param {string} eventName The name of the event to trigger.
      * @param {object[]} [args] The arguments of the event.
      */
-    constructor(unicastId, protocolId, eventName, args){
-        this.uid = unicastId;
+    constructor(protocolId, eventName, args){
         this.pid = protocolId;
         this.event = eventName;
         this.args = args;
@@ -128,7 +20,7 @@ class MUnicast {
 
 module.exports = MUnicast;
 
-},{}],5:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 (function (process){
 /**
  * This is the web browser implementation of `debug()`.
@@ -317,7 +209,7 @@ function localstorage() {
 }
 
 }).call(this,require('_process'))
-},{"./debug":6,"_process":10}],6:[function(require,module,exports){
+},{"./debug":3,"_process":7}],3:[function(require,module,exports){
 
 /**
  * This is the common logic for both the Node.js and web browser
@@ -521,7 +413,7 @@ function coerce(val) {
   return val;
 }
 
-},{"ms":9}],7:[function(require,module,exports){
+},{"ms":6}],4:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -824,7 +716,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],8:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -17912,7 +17804,7 @@ function isUndefined(arg) {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -18063,7 +17955,7 @@ function plural(ms, n, name) {
   return Math.ceil(ms / n) + ' ' + name + 's'
 }
 
-},{}],10:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -18155,90 +18047,76 @@ process.chdir = function (dir) {
 'use strict';
 
 const debug = require('debug')('unicast-definition');
+const EventEmitter = require('events');
 const _ = require('lodash');
 
-const IUnicast = require('./interfaces/iunicast.js');
-
-const ExProtocol = require('./exceptions/exprotocol.js');
-const ExMessage = require('./exceptions/exmessage.js');
+const MUnicast = require('./messages/municast.js');
 
 /**
- * Unicast component that simply chooses a random peer from a peer-sampling
- * protocol and send a message.
+ * Unicast component that simply sends messages to a neighbor.  It provides
+ * easy-to-use event-like functions on top of a peer-sampling
+ * protocol. Protocols can send messages using unicast.emit('eventName',
+ * neighborId, args) and the neighbor can catch them using
+ * unicast.on('eventName', args).
  */
-class Unicast {
+class Unicast extends EventEmitter {
     /**
      * @param {IPSP} psp The peer-sampling protocol.
      * @param {object} [options] The options of this unicast.
-     * @param {string} [options.uid = 'default-unicast'] The name of this
+     * @param {string} [options.pid = 'default-unicast'] The name of this
      * unicast.
      * @param {number} [option.retry = 0] The number of attempt to send a
      * message.
      */
-    constructor(psp, options = {}) {        
-        this.options = ( {retry: 0, uid: 'default-unicast'}, options);
+    constructor(psp, options = {}) {
+        super();
+        // #0 default options
+        this.options = ( {retry: 0, pid: 'default-unicast'}, options);
         // #1 create the table of registered protocols
         this.psp = psp;
-        this.protocols = new Map();
         // #2 overload the receipt of messages from the peer-sampling protocol
-        // (TODO) maybe a cleaner way ? 
         let __receive = psp._receive;
         psp._receive = (peerId, message) => {
             try {
                 __receive.call(psp, peerId, message);
             } catch (e) {
                 if (message.type && message.type === 'MUnicast' &&
-                    message.uid === this.options.uid) {
-                    if (this.protocols.has(message.pid)){
-                        this.protocols.get(message.pid)._receive(message);
-                    } else {
-                        throw new ExProtocol('_receive',
-                                             message.pid,
-                                             'does not exist');
-                    };
+                    message.pid === this.options.pid) {
+                    this._emit(message.event, ...(message.args));
                 } else {
                     throw (e);
                 };
             };
         };
         
+        // #3 replace the basic behavior of eventemitter.emit
+        this._emit = this.emit;        
+        /**
+         * Send a message using the emit function.
+         * @param {string} event The event name.
+         * @param {string} peerId The identifier of the peer to send the event
+         * to.
+         * @param {object[]} [args] The arguments of the event.
+         * @returns {Promise} Resolved if the message seems to have been sent,
+         * rejected otherwise (e.g. timeout, unkown peers).
+         */
+        this.emit = (event, peerId, ...args) => {
+            return psp.send(peerId, new MUnicast(this.options.pid, event, args),
+                            this.options.retry);
+        };
+        
         debug('just initialized on top of %s@%s.', this.psp.PID, this.psp.PEER);
     };
 
-
     /**
-     * Registers the protocol that wishes to use this module.
-     * @param {string} protocolId The identifier of the protocol that registers.
-     * @returns {IUnicast} An interface providing easy-to-use event-like
-     * functions to send and receive messages.
+     * Destroy all listeners and remove the send capabilities
      */
-    register(protocolId) {
-        if (!this.protocols.has(protocolId)) {
-            this.protocols.set(protocolId, new IUnicast(protocolId, this));
-            debug('Protocol %s just registered.', protocolId);
-            return this.protocols.get(protocolId);
-        } else {
-            throw new ExProtocol('register', protocolId, 'already exists');
-        };
+    destroy () {
+        this.removeAllListener();
+        this.emit = this._emit; // retrieve basic behavior
     };
-    
-    /**
-     * Unregisters the protocol.
-     * @param {string} protocolId The identifier of the protocol that
-     * unregisters.
-     */
-    unregister(protocolId) {
-        if (this.protocols.has(protocolId)){
-            this.protocols.get(protocolId).destroy();
-            this.protocols.delete(protocolId);
-            debug('Protocol %s just unregistered.', protocolId);
-        } else {
-            throw new ExProtocol('unregister', protocolId, 'does not exist');
-        };
-    };
-    
 };
 
 module.exports = Unicast;
 
-},{"./exceptions/exmessage.js":1,"./exceptions/exprotocol.js":2,"./interfaces/iunicast.js":3,"debug":5,"lodash":8}]},{},[]);
+},{"./messages/municast.js":1,"debug":2,"events":4,"lodash":5}]},{},[]);

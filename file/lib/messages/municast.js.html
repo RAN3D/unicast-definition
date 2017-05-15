@@ -33,11 +33,8 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/unicast.js~Unicast.html">Unicast</a></span></span></li>
-<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">exceptions</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/exceptions/exmessage.js~ExMessage.html">ExMessage</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/exceptions/exprotocol.js~ExProtocol.html">ExProtocol</a></span></span></li>
-<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interfaces</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/interfaces/iunicast.js~IUnicast.html">IUnicast</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-EventEmitter">EventEmitter</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">interfaces</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/interfaces/ipsp.js~IPSP.html">IPSP</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">messages</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/messages/municast.js~MUnicast.html">MUnicast</a></span></span></li>
 </ul>
 </div>
@@ -51,14 +48,11 @@
  */
 class MUnicast {
     /**
-     * @param {string} unicastId The identifier of the unicast protocol.
-     * @param {string} protocolId The identifier of the protocol that sent the
-     * message and that will receive the message.
+     * @param {string} protocolId The identifier of the unicast protocol.
      * @param {string} eventName The name of the event to trigger.
      * @param {object[]} [args] The arguments of the event.
      */
-    constructor(unicastId, protocolId, eventName, args){
-        this.uid = unicastId;
+    constructor(protocolId, eventName, args){
         this.pid = protocolId;
         this.event = eventName;
         this.args = args;

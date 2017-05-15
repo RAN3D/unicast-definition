@@ -1,32 +1,14 @@
 window.esdocSearchIndex = [
   [
-    "unicast-definition/lib/interfaces/iunicast.js~eventemitter",
+    "unicast-definition~eventemitter",
     "variable/index.html#static-variable-EventEmitter",
-    "<span>EventEmitter</span> <span class=\"search-result-import-path\">unicast-definition/lib/interfaces/iunicast.js</span>",
+    "<span>EventEmitter</span> <span class=\"search-result-import-path\">unicast-definition</span>",
     "variable"
-  ],
-  [
-    "unicast-definition/lib/exceptions/exmessage.js~exmessage",
-    "class/lib/exceptions/exmessage.js~ExMessage.html",
-    "<span>ExMessage</span> <span class=\"search-result-import-path\">unicast-definition/lib/exceptions/exmessage.js</span>",
-    "class"
-  ],
-  [
-    "unicast-definition/lib/exceptions/exprotocol.js~exprotocol",
-    "class/lib/exceptions/exprotocol.js~ExProtocol.html",
-    "<span>ExProtocol</span> <span class=\"search-result-import-path\">unicast-definition/lib/exceptions/exprotocol.js</span>",
-    "class"
   ],
   [
     "unicast-definition/lib/interfaces/ipsp.js~ipsp",
     "class/lib/interfaces/ipsp.js~IPSP.html",
     "<span>IPSP</span> <span class=\"search-result-import-path\">unicast-definition/lib/interfaces/ipsp.js</span>",
-    "class"
-  ],
-  [
-    "unicast-definition/lib/interfaces/iunicast.js~iunicast",
-    "class/lib/interfaces/iunicast.js~IUnicast.html",
-    "<span>IUnicast</span> <span class=\"search-result-import-path\">unicast-definition/lib/interfaces/iunicast.js</span>",
     "class"
   ],
   [
@@ -372,66 +354,6 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "lib/exceptions/exmessage.js",
-    "file/lib/exceptions/exmessage.js.html",
-    "lib/exceptions/exmessage.js",
-    "file"
-  ],
-  [
-    "lib/exceptions/exmessage.js~exmessage#constructor",
-    "class/lib/exceptions/exmessage.js~ExMessage.html#instance-constructor-constructor",
-    "lib/exceptions/exmessage.js~ExMessage#constructor",
-    "method"
-  ],
-  [
-    "lib/exceptions/exmessage.js~exmessage#message",
-    "class/lib/exceptions/exmessage.js~ExMessage.html#instance-member-message",
-    "lib/exceptions/exmessage.js~ExMessage#message",
-    "member"
-  ],
-  [
-    "lib/exceptions/exmessage.js~exmessage#reason",
-    "class/lib/exceptions/exmessage.js~ExMessage.html#instance-member-reason",
-    "lib/exceptions/exmessage.js~ExMessage#reason",
-    "member"
-  ],
-  [
-    "lib/exceptions/exmessage.js~exmessage#source",
-    "class/lib/exceptions/exmessage.js~ExMessage.html#instance-member-source",
-    "lib/exceptions/exmessage.js~ExMessage#source",
-    "member"
-  ],
-  [
-    "lib/exceptions/exprotocol.js",
-    "file/lib/exceptions/exprotocol.js.html",
-    "lib/exceptions/exprotocol.js",
-    "file"
-  ],
-  [
-    "lib/exceptions/exprotocol.js~exprotocol#constructor",
-    "class/lib/exceptions/exprotocol.js~ExProtocol.html#instance-constructor-constructor",
-    "lib/exceptions/exprotocol.js~ExProtocol#constructor",
-    "method"
-  ],
-  [
-    "lib/exceptions/exprotocol.js~exprotocol#pid",
-    "class/lib/exceptions/exprotocol.js~ExProtocol.html#instance-member-pid",
-    "lib/exceptions/exprotocol.js~ExProtocol#pid",
-    "member"
-  ],
-  [
-    "lib/exceptions/exprotocol.js~exprotocol#reason",
-    "class/lib/exceptions/exprotocol.js~ExProtocol.html#instance-member-reason",
-    "lib/exceptions/exprotocol.js~ExProtocol#reason",
-    "member"
-  ],
-  [
-    "lib/exceptions/exprotocol.js~exprotocol#source",
-    "class/lib/exceptions/exprotocol.js~ExProtocol.html#instance-member-source",
-    "lib/exceptions/exprotocol.js~ExProtocol#source",
-    "member"
-  ],
-  [
     "lib/interfaces/ipsp.js",
     "file/lib/interfaces/ipsp.js.html",
     "lib/interfaces/ipsp.js",
@@ -448,42 +370,6 @@ window.esdocSearchIndex = [
     "class/lib/interfaces/ipsp.js~IPSP.html#instance-method-send",
     "lib/interfaces/ipsp.js~IPSP#send",
     "method"
-  ],
-  [
-    "lib/interfaces/iunicast.js",
-    "file/lib/interfaces/iunicast.js.html",
-    "lib/interfaces/iunicast.js",
-    "file"
-  ],
-  [
-    "lib/interfaces/iunicast.js~iunicast#_destroy",
-    "class/lib/interfaces/iunicast.js~IUnicast.html#instance-method-_destroy",
-    "lib/interfaces/iunicast.js~IUnicast#_destroy",
-    "method"
-  ],
-  [
-    "lib/interfaces/iunicast.js~iunicast#_emit",
-    "class/lib/interfaces/iunicast.js~IUnicast.html#instance-member-_emit",
-    "lib/interfaces/iunicast.js~IUnicast#_emit",
-    "member"
-  ],
-  [
-    "lib/interfaces/iunicast.js~iunicast#_receive",
-    "class/lib/interfaces/iunicast.js~IUnicast.html#instance-method-_receive",
-    "lib/interfaces/iunicast.js~IUnicast#_receive",
-    "method"
-  ],
-  [
-    "lib/interfaces/iunicast.js~iunicast#constructor",
-    "class/lib/interfaces/iunicast.js~IUnicast.html#instance-constructor-constructor",
-    "lib/interfaces/iunicast.js~IUnicast#constructor",
-    "method"
-  ],
-  [
-    "lib/interfaces/iunicast.js~iunicast#emit",
-    "class/lib/interfaces/iunicast.js~IUnicast.html#instance-member-emit",
-    "lib/interfaces/iunicast.js~IUnicast#emit",
-    "member"
   ],
   [
     "lib/messages/municast.js",
@@ -522,16 +408,16 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "lib/messages/municast.js~municast#uid",
-    "class/lib/messages/municast.js~MUnicast.html#instance-member-uid",
-    "lib/messages/municast.js~MUnicast#uid",
-    "member"
-  ],
-  [
     "lib/unicast.js",
     "file/lib/unicast.js.html",
     "lib/unicast.js",
     "file"
+  ],
+  [
+    "lib/unicast.js~unicast#_emit",
+    "class/lib/unicast.js~Unicast.html#instance-member-_emit",
+    "lib/unicast.js~Unicast#_emit",
+    "member"
   ],
   [
     "lib/unicast.js~unicast#constructor",
@@ -540,15 +426,21 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "lib/unicast.js~unicast#options",
-    "class/lib/unicast.js~Unicast.html#instance-member-options",
-    "lib/unicast.js~Unicast#options",
+    "lib/unicast.js~unicast#destroy",
+    "class/lib/unicast.js~Unicast.html#instance-method-destroy",
+    "lib/unicast.js~Unicast#destroy",
+    "method"
+  ],
+  [
+    "lib/unicast.js~unicast#emit",
+    "class/lib/unicast.js~Unicast.html#instance-member-emit",
+    "lib/unicast.js~Unicast#emit",
     "member"
   ],
   [
-    "lib/unicast.js~unicast#protocols",
-    "class/lib/unicast.js~Unicast.html#instance-member-protocols",
-    "lib/unicast.js~Unicast#protocols",
+    "lib/unicast.js~unicast#options",
+    "class/lib/unicast.js~Unicast.html#instance-member-options",
+    "lib/unicast.js~Unicast#options",
     "member"
   ],
   [
@@ -556,17 +448,5 @@ window.esdocSearchIndex = [
     "class/lib/unicast.js~Unicast.html#instance-member-psp",
     "lib/unicast.js~Unicast#psp",
     "member"
-  ],
-  [
-    "lib/unicast.js~unicast#register",
-    "class/lib/unicast.js~Unicast.html#instance-method-register",
-    "lib/unicast.js~Unicast#register",
-    "method"
-  ],
-  [
-    "lib/unicast.js~unicast#unregister",
-    "class/lib/unicast.js~Unicast.html#instance-method-unregister",
-    "lib/unicast.js~Unicast#unregister",
-    "method"
   ]
 ]
