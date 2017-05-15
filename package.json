@@ -1,6 +1,6 @@
 {
     "name": "unicast-definition",
-    "version": "1.0.3",
+    "version": "2.0.0",
     "author": "Chat-Wane <grumpy.chat.wane@gmail.com>",
     "description": "Unicast component relying on a peer-sampling protocol",
     "main": "./lib/unicast.js",
@@ -15,19 +15,17 @@
     ],
     "dependencies": {
         "lodash": "^4.17.4",
-        "debug": "^2.6.1",
-        "uuid": "^3.0.1"
+        "debug": "^2.6.1"
     },
     "bundledDependencies": [
         "lodash",
-        "debug",
-        "uuid"
+        "debug"
     ],
     "devDependencies": {
         "browserify": "6.2.x",
         "esdoc": "^0.5.2",
         "esdoc-node": "^1.0.1",
-        "spray-wrtc": "git://github.com/ran3d/spray-wrtc.git#merging"
+        "spray-wrtc": "^2.0.1"
     },
     "scripts": {
         "debug": "browserify -r ./lib/unicast.js:unicast-definition --debug > build/unicast-definition.bundle.debug.js",
