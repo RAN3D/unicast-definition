@@ -1,4 +1,4 @@
-# unicast-definition
+# unicast-definition [![Build Status](https://travis-ci.org/RAN3D/unicast-definition.svg?branch=master)](https://travis-ci.org/RAN3D/unicast-definition)
 
 <i>Keywords: Unicast, browser-to-browser communication, WebRTC</i>
 
