@@ -1,0 +1,32 @@
+{
+  "coverage": "52.94%",
+  "expectCount": 17,
+  "actualCount": 9,
+  "files": {
+    "lib/interfaces/ipsp.js": {
+      "expectCount": 3,
+      "actualCount": 3,
+      "undocumentLines": []
+    },
+    "lib/messages/municast.js": {
+      "expectCount": 6,
+      "actualCount": 2,
+      "undocumentLines": [
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    "lib/unicast.js": {
+      "expectCount": 8,
+      "actualCount": 4,
+      "undocumentLines": [
+        3,
+        28,
+        30,
+        47
+      ]
+    }
+  }
+}
