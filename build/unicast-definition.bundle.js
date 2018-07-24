@@ -3340,7 +3340,7 @@ var Unicast = function (_EventEmitter) {
         __receive.call(psp, peerId, message);
       } catch (e) {
         if (message.type && message.type === 'MUnicast' && message.pid === _this.options.pid) {
-          _this._emit.apply(_this, [message.event].concat(_toConsumableArray(message.args)));
+          _this._emit.apply(_this, [message.event, peerId].concat(_toConsumableArray(message.args)));
         } else {
           throw e;
         };

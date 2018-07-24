@@ -1,6 +1,6 @@
 {
   "name": "unicast-definition",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "author": "Chat-Wane <grumpy.chat.wane@gmail.com>",
   "description": "Unicast component relying on a peer-sampling protocol",
   "main": "./lib/unicast.js",
@@ -30,7 +30,6 @@
     "esdoc-node": "^1.0.3",
     "esdoc-standard-plugin": "^1.0.0",
     "snazzy": "^7.1.1",
-    "spray-wrtc": "^2.0.10",
     "standard": "^11.0.1"
   },
   "scripts": {
@@ -39,7 +38,7 @@
     "debug": "browserify -r ./lib/unicast.js:unicast-definition -t [babelify --presets [ env ] ] --debug > build/unicast-definition.bundle.debug.js",
     "build": "browserify -r ./lib/unicast.js:unicast-definition -t [babelify --presets [ env ] ] > build/unicast-definition.bundle.js",
     "esdoc": "esdoc && npm run esdoc:example",
-    "esdoc:example": "cp -R ./build ./examples ./docs",
+    "esdoc:example": "cp -R ./build ./docs",
     "test": "npm run all",
     "all": "npm run lint && npm run debug && npm run build && npm run esdoc"
   },
