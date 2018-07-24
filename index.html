@@ -37,11 +37,52 @@
 </nav>
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="unicast-definition--a-href--https---travis-ci-org-ran3d-unicast-definition---img-src--https---travis-ci-org-ran3d-unicast-definition-svg-branch-master--alt--build-status----a-">unicast-definition <a href="https://travis-ci.org/RAN3D/unicast-definition"><img src="https://travis-ci.org/RAN3D/unicast-definition.svg?branch=master" alt="Build Status"></a></h1><p>&lt;i&gt;Keywords: Unicast, browser-to-browser communication, WebRTC&lt;/i&gt;</p>
-<p>Unicast component relying on a peer-sampling protocol. Similarly to
+<p>Unicast component relying on a <a href="https://github.com/ran3d/n2n-overlay-wrtc">n2n component</a>. Similarly to
 <a href="https://socket.io">socket.io</a>, this module provides an event-like API to send
 and receive messages.</p>
-<h2 id="installation">Installation</h2><p><code>$ npm install unicast-definition</code></p>
+<h2 id="installation">Installation</h2><pre><code class="lang-bash"><code class="source-code prettyprint">npm install unicast-definition</code>
+</code></pre>
 <h2 id="api">API</h2><p>The API is available <a href="https://ran3d.github.io/unicast-definition/">here</a>.</p>
+<h2 id="usage">Usage</h2><p><code>`</code>javascript
+// require as you want the N2N module
+const S = require(&apos;n2n-overlay-wrtc&apos;)
+// require this module
+const U = require(&apos;unicast-definition&apos;)</p>
+<p>// #1 create 3 peers
+const s1 = new S({peer: &apos;1&apos;, config: {trickle: true}})
+const s2 = new S({peer: &apos;2&apos;, config: {trickle: true}})
+const s3 = new S({peer: &apos;3&apos;, config: {trickle: true}})
+// #2 associate a unicast protocol to each peer
+const u1 = new U(s1, {retry: 1, pid: &apos;com1&apos;})
+const u2 = new U(s2, {retry: 1, pid: &apos;com1&apos;})
+const u3 = new U(s3, {retry: 1, pid: &apos;com1&apos;})</p>
+<p>u1.on(&apos;meow&apos;, (from, i, am, a, cat) =&gt; console.log(&apos;@s1 from %s: %s %s %s %s&apos;, from, i, am, a, cat))
+u2.on(&apos;meow&apos;, (from, i, am, a, cat) =&gt; console.log(&apos;@s2 from %s: %s %s %s %s&apos;, from, i, am, a, cat))
+u3.on(&apos;meow&apos;, (from, i, am, a, cat) =&gt; console.log(&apos;@s3 from %s: %s %s %s %s&apos;, from, i, am, a, cat))</p>
+<p>const u4 = new U(s1, {retry: 1, pid: &apos;com2&apos;})
+const u5 = new U(s2, {retry: 1, pid: &apos;com2&apos;})
+const u6 = new U(s3, {retry: 1, pid: &apos;com2&apos;})</p>
+<p>u4.on(&apos;:3&apos;, (from, i, is, cat) =&gt; console.log(&apos;@s1: miaw&apos;))
+u5.on(&apos;:3&apos;, (from, i, is, cat) =&gt; console.log(&apos;@s2: meow&apos;))
+u6.on(&apos;:3&apos;, (from, i, is, cat) =&gt; console.log(&apos;@s3: miou&apos;))</p>
+<p>// #4 simulate signaling server
+const callback = (from, to) =&gt; {
+  return (offer) =&gt; {
+    to.connect((answer) =&gt; { from.connect(answer) }, offer)
+  }
+}</p>
+<p>// #4 s1 contacts s2, 2-peers network
+s1.connection(s2).then(() =&gt; {
+  console.log(&apos;s1 &lt;=&gt; s2.&apos;)
+  s3.connection(s2).then(() =&gt; {
+    console.log(&apos;s1 &lt;=&gt; s2; s1 -&gt; s3; s3 -&gt; s2&apos;))
+    u3.emit(&apos;meow&apos;, s2.getOutviewId(), &apos;i&apos;, &apos;am&apos;, &apos;a&apos;, &apos;cat&apos;).then(() =&gt; {
+      u3.emit(&apos;:3&apos;, s2.getOutviewId(), &apos;parameters&apos;, &apos;dont&apos;, &apos;matter&apos;)).then(() =&gt; {
+        u6.emit(&apos;:3&apos;, s2.getOutviewId(), &apos;parameters&apos;, &apos;dont&apos;, &apos;matter&apos;)
+      })
+    })
+  })
+})</p>
 </div>
 </div>
 

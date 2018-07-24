@@ -75,7 +75,7 @@ class Unicast extends EventEmitter {
       } catch (e) {
         if (message.type &amp;&amp; message.type === &apos;MUnicast&apos; &amp;&amp;
                     message.pid === this.options.pid) {
-          this._emit(message.event, ...(message.args))
+          this._emit(message.event, peerId, ...(message.args))
         } else {
           throw (e)
         };
