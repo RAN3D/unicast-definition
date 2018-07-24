@@ -1,0 +1,8 @@
+docs
+.esdoc.json
+.gitignore
+.travis.yml
+deploy_doc.sh
+node_modules
+.npmignore
+README.md
